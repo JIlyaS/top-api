@@ -14,7 +14,7 @@ import { UsersModule } from './users/users.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      expandVariables: true,
+      expandVariables: true
     }),
     MongooseModule.forRoot('mongodb://localhost/test'),
     // Подключение typegoose - устарело
