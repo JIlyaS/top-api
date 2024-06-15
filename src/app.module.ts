@@ -12,24 +12,30 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './users/users.module';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      expandVariables: true
-    }),
-    MongooseModule.forRoot('mongodb://localhost/test'),
-    // Подключение typegoose - устарело
-    // TypegooseModule.forRootAsync({
-    //   imports: [ConfigModule],
-    //   inject: [ConfigService],
-    //   useFactory: getMongoConfig
-    // }),
-    AuthModule,
-    TopPageModule,
-    ProductModule,
-    ReviewModule,
-    UsersModule
-  ],
-  controllers: [AppController],
-  providers: [AppService],
+	imports: [
+		ConfigModule.forRoot({
+			expandVariables: true,
+		}),
+		// MONGO_LOGIN=admin
+		// MONGO_PASSWORD=admin
+		// MONGO_HOST=127.0.0.1
+		// MONGO_PORT=27017
+		// MONGO_AUTH_DATABASE=admin
+
+		MongooseModule.forRoot('mongodb://localhost:27017/top-api'),
+		// Подключение typegoose - устарело
+		// TypegooseModule.forRootAsync({
+		//   imports: [ConfigModule],
+		//   inject: [ConfigService],
+		//   useFactory: getMongoConfig
+		// }),
+		AuthModule,
+		TopPageModule,
+		ProductModule,
+		ReviewModule,
+		UsersModule,
+	],
+	controllers: [AppController],
+	providers: [AppService],
 })
 export class AppModule {}

@@ -13,82 +13,80 @@ const testDto: CreateReviewDto = {
 	description: 'описание тестовое',
 	rating: 5,
 	productId,
-	typegooseName: {}
-}
+	typegooseName: {},
+};
 
 describe('AppController (e2e)', () => {
-  let app: INestApplication;
-  let createdId: string;
+	let app: INestApplication;
+	let createdId: string;
 
-  beforeEach(async () => {
-	const moduleFixture: TestingModule = await Test.createTestingModule({
-		imports: [AppModule],
-	}
+	beforeEach(async () => {
+		const moduleFixture: TestingModule = await Test.createTestingModule({
+			imports: [AppModule],
+		}).compile();
 
-).compile();
+		app = moduleFixture.createNestApplication();
+		await app.init();
+	});
 
-	app = moduleFixture.createNestApplication();
-	await app.init();
-  });
+	it('/review/create (POST) - success', async () => {
+		return await request(app.getHttpServer())
+			.post('/review/create')
+			.send(testDto)
+			.expect(201)
+			.then(({ body }: request.Response) => {
+				createdId = body._id;
+				expect(createdId).toBeDefined();
+				//   done();
+			});
+	});
 
-  it('/review/create (POST) - success', async () => {
-	return await request(app.getHttpServer())
-		.post('/review/create')
-		.send(testDto)
-		.expect(201)
-		.then(({ body }: request.Response) => {
-          createdId = body._id;
-		  expect(createdId).toBeDefined();
-		//   done();
-		});
-  });
+	it('/review/create (POST) - fail', async () => {
+		return request(app.getHttpServer())
+			.post('/review/create')
+			.send({ ...testDto, rating: 0 })
+			.expect(400)
+			.then(({ body }: request.Response) => {
+				console.log(body);
+			});
+	});
 
-  it('/review/create (POST) - fail', async () => {
-	return request(app.getHttpServer())
-		.post('/review/create')
-		.send({...testDto, rating: 0})
-		.expect(400)
-		.then(({ body }: request.Response) => {
-          console.log(body);
-		});
-  });
+	it('/review/byProduct/:productId (GET) - success', async () => {
+		return request(app.getHttpServer())
+			.get('/review/byProduct' + createdId)
+			.expect(200)
+			.then(({ body }: request.Response) => {
+				expect(body.length).toBe(1);
+				//   done();
+			});
+	});
 
-  it('/review/byProduct/:productId (GET) - success', async () => {
-	return request(app.getHttpServer())
-		.get('/review/byProduct' + createdId)
-		.expect(200)
-		.then(({ body }: request.Response) => {
-          expect(body.length).toBe(1);
-		//   done();
-		});
-  });
+	it('/review/byProduct/:productId (GET) - fail', async () => {
+		return request(app.getHttpServer())
+			.get('/review/byProduct' + new Types.ObjectId().toHexString())
+			.expect(200)
+			.then(({ body }: request.Response) => {
+				expect(body.length).toBe(0);
+				//   done();
+			});
+	});
 
-  it('/review/byProduct/:productId (GET) - fail', async () => {
-	return request(app.getHttpServer())
-		.get('/review/byProduct' + new Types.ObjectId().toHexString())
-		.expect(200)
-		.then(({ body }: request.Response) => {
-          expect(body.length).toBe(0);
-		//   done();
-		});
-  });
+	it('/review/:id (DELETE) - success', () => {
+		return request(app.getHttpServer())
+			.delete('/review/' + createdId)
+			.expect(200);
+	});
 
-  it('/review/:id (DELETE) - success', () => {
-	return request(app.getHttpServer())
-		.delete('/review/' + createdId)
-		.expect(200);
-  });
+	it('/review/:id (DELETE) - fail', () => {
+		return request(app.getHttpServer())
+			.delete('/review/' + new Types.ObjectId().toHexString())
+			.expect(404, {
+				statusCode: 404,
+				message: REVIEW_NOT_FOUND,
+			});
+	});
 
-  it('/review/:id (DELETE) - fail', () => {
-	return request(app.getHttpServer())
-		.delete('/review/' + new Types.ObjectId().toHexString())
-		.expect(404, {
-			statusCode: 404,
-			message: REVIEW_NOT_FOUND
-		});
-  });
-
-  afterAll(() => {
-    disconnect();
-  });
+	afterAll(() => {
+		disconnect();
+	});
 });

@@ -15,7 +15,7 @@
 
 //     @prop()
 //     rating: number;
-    
+
 //     @prop()
 //     productId: Types.ObjectId;
 // }

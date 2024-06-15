@@ -7,22 +7,24 @@ import { Types } from 'mongoose';
 
 @Injectable()
 export class ReviewService {
-    // constructor(@InjectModel(ReviewModel) private readonly reviewModel: ModelType<ReviewModel>) { }
-    
-    async create(dto: CreateReviewDto): Promise<any> { // DocumentType<ReviewModel>
-      // return this.reviewModel.create(dto);
-    }
+	// constructor(@InjectModel(ReviewModel) private readonly reviewModel: ModelType<ReviewModel>) { }
 
-    async delete(id: string): Promise<any> { //DocumentType<ReviewModel> | null
-      // return this.reviewModel.findByIdAndDelete(id).exec();
-    }
+	async create(dto: CreateReviewDto): Promise<any> {
+		// DocumentType<ReviewModel>
+		// return this.reviewModel.create(dto);
+	}
 
-    async findByProductId(productId: string): Promise<any> { // DocumentType<ReviewModel>[]
-      // return this.reviewModel.find({ productId: Types.ObjectId(productId) }).exec();
-    }
+	async delete(id: string): Promise<any> {
+		//DocumentType<ReviewModel> | null
+		// return this.reviewModel.findByIdAndDelete(id).exec();
+	}
 
-    async deleteByProductId(productId: string) {
-      // return this.reviewModel.deleteMany({ productId: Types.ObjectId(productId) }).exec();
-    }
+	async findByProductId(productId: string): Promise<any> {
+		// DocumentType<ReviewModel>[]
+		// return this.reviewModel.find({ productId: Types.ObjectId(productId) }).exec();
+	}
 
+	async deleteByProductId(productId: string) {
+		// return this.reviewModel.deleteMany({ productId: Types.ObjectId(productId) }).exec();
+	}
 }
